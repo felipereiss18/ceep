@@ -4,41 +4,32 @@ import FormularioCadastro from "./components/FormularioCadastro";
 import ListaCategoria from "./components/ListaCategoria"
 import "./assets/App.css"
 import "./assets/index.css"
+import Categorias from "./dados/Categorias";
+import ArrayNotas from "./dados/Notas";
 
 class App extends Component{
 
     constructor(props) {
         super(props);
-        this.notas = [];
-        this.state = {
-            notas:[]
-        }
-    }
-
-    criarNota(titulo, texto){
-        const novaNota = {titulo, texto};
-        const novaArrayNotas = [...this.state.notas, novaNota];
-        const novoEstado = {
-            notas: novaArrayNotas
-        }
-        this.setState(novoEstado);
-    }
-
-    deletaNota(index){
-        let arrayNota = this.state.notas;
-        arrayNota.splice(index,1);
-
-        this.setState({notas:arrayNota})
+        this.categorias = new Categorias();
+        this.notas = new ArrayNotas();
     }
 
     render() {
         return (
           <section className="conteudo">
-              <FormularioCadastro criarNota={this.criarNota.bind(this)}/>
+              <FormularioCadastro
+                  criarNota={this.notas.adicionarNota.bind(this.notas)}
+                  categorias={this.categorias}
+              />
               <main className="conteudo-principal">
-                  <ListaCategoria/>
+                  <ListaCategoria
+                      categorias={this.categorias}
+                      adicionarCategoria={this.categorias.adicionarCategoria.bind(this.categorias)}
+                  />
+                  <ListaNotas apagaNota={this.notas.excluirNota.bind(this.notas)}
+                              notas={this.notas}/>
               </main>
-              <ListaNotas apagaNota={this.deletaNota.bind(this)} notas={this.state.notas}/>
           </section>
       );
     }
